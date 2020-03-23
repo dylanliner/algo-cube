@@ -10,11 +10,16 @@ module.exports = {
   extends: [
     'airbnb-typescript',
     "airbnb/hooks",
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "prettier",
-    "prettier/react",
     "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
   ],
+  rules: {
+    // ...
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
 };

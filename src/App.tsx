@@ -8,7 +8,7 @@ function App() {
 
   const [boxes, setBoxes] = useState([{ position: [0, 0, 0] }]);
 
-  const cameraCenter = size / 2 - 1;
+  const cameraCenter = size / 2 ;
 
   interface BoxObject {
     position: number[];

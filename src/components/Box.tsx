@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { useFrame } from "react-three-fiber";
 import * as THREE from "three";
 
-function Box(props: any) {
+const Box = React.memo((props: any) => {
   // This reference will give us direct access to the mesh
   const mesh = useRef(new THREE.Mesh());
 
@@ -29,5 +29,6 @@ function Box(props: any) {
       />
     </mesh>
   );
-}
+});
+Box.displayName = "Box";
 export default Box;

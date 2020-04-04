@@ -1,30 +1,41 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Canvas, useFrame } from "react-three-fiber";
 import Box from "./components/Box";
+import { BoxObject } from "./components/Box";
 
-function App() {
+const App: React.FC = () => {
   const size = 10;
-
-  const [boxes, setBoxes] = useState([{ position: [0, 0, 0] }]);
+  const updateBlocked = (id: string, isBlocked: boolean): void => {
+    console.log(id + " is blocked " + isBlocked);
+  };
+  console.log("I am the grid and am rerendering");
+  const [boxes, setBoxes] = useState([
+    {
+      id: "",
+      position: [0, 0, 0] as [number, number, number],
+      isBlocked: false,
+      updateBlocked: updateBlocked,
+    },
+  ]);
 
   const cameraCenter = size / 2 - 1;
 
-  interface BoxObject {
-    position: number[];
-  }
-
-  function createGrid() {
-    const boxArray = [];
-    for (let i = 0; i < size; i++) {
-      for (let y = 0; y < size; y++) {
-        boxArray.push({ position: [i, y, 0] });
-      }
-    }
-    setBoxes(boxArray);
-  }
-
   useEffect(() => {
+    function createGrid() {
+      const boxArray = [];
+      for (let i = 0; i < size; i++) {
+        for (let y = 0; y < size; y++) {
+          boxArray.push({
+            id: "",
+            position: [i, y, 0] as [number, number, number],
+            isBlocked: false,
+            updateBlocked: updateBlocked,
+          });
+        }
+      }
+      setBoxes(boxArray);
+    }
     createGrid();
   }, []);
 
@@ -42,16 +53,23 @@ function App() {
     });
     return null;
   }
+
   return (
     <Canvas style={style}>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      {boxes.map((box: BoxObject, index: number) => (
-        <Box key={index.toString()} position={box.position} />
+      {boxes.map((boxProps: BoxObject, index: number) => (
+        <Box
+          key={index.toString()}
+          id={index.toString()}
+          position={boxProps.position}
+          updateBlocked={updateBlocked}
+          isBlocked={boxProps.isBlocked}
+        />
       ))}
       <CustomCamera />
     </Canvas>
   );
-}
+};
 
 export default App;

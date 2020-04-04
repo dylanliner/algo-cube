@@ -19,7 +19,7 @@ const App: React.FC = () => {
     },
   ]);
 
-  const cameraCenter = size / 2 - 1;
+  const cameraCenter = size / 2 ;
 
   useEffect(() => {
     function createGrid() {

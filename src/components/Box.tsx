@@ -3,10 +3,10 @@ import { useFrame } from "react-three-fiber";
 import * as THREE from "three";
 
 export interface BoxObject {
-  id: string;
+  index: number;
   position: [number, number, number];
   isBlocked: boolean;
-  updateBlocked: (key: string, isBlocked: boolean) => void;
+  updateBlocked: (index: number, isBlocked: boolean) => void;
 }
 
 const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
@@ -26,7 +26,8 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
       ref={mesh}
       scale={[0.5, 0.5, 0.5]}
       onClick={(e) => {
-        props.updateBlocked(props.id, !props.isBlocked);
+        console.log("clicked on box");
+        props.updateBlocked(props.index, !props.isBlocked);
       }}
       onPointerOver={(e) => setHover(true)}
       onPointerOut={(e) => setHover(false)}

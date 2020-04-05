@@ -3,31 +3,41 @@ import "./App.css";
 import { Canvas, useFrame } from "react-three-fiber";
 import Box from "./components/Box";
 import { BoxObject } from "./components/Box";
+import update from "immutability-helper";
 
 const App: React.FC = () => {
   const size = 10;
-  const updateBlocked = (id: string, isBlocked: boolean): void => {
-    console.log(id + " is blocked " + isBlocked);
-  };
+
   console.log("I am the grid and am rerendering");
   const [boxes, setBoxes] = useState([
     {
-      id: "",
+      index: 0,
       position: [0, 0, 0] as [number, number, number],
       isBlocked: false,
-      updateBlocked: updateBlocked,
+      updateBlocked: (index: number, isBlocked: boolean) => {
+        console.log("stuff");
+      },
     },
   ]);
 
-  const cameraCenter = size / 2 ;
+  const cameraCenter = size / 2;
 
   useEffect(() => {
+    console.log("I am in useEffect");
+    const updateBlocked = (index: number, isBlocked: boolean): void => {
+      console.log(index + " is blocked " + isBlocked);
+
+      setBoxes((boxes) =>
+        update(boxes, { [index]: { isBlocked: { $set: isBlocked } } })
+      );
+    };
     function createGrid() {
+      console.log("I am in create Grid");
       const boxArray = [];
       for (let i = 0; i < size; i++) {
         for (let y = 0; y < size; y++) {
           boxArray.push({
-            id: "",
+            index: 0,
             position: [i, y, 0] as [number, number, number],
             isBlocked: false,
             updateBlocked: updateBlocked,
@@ -61,9 +71,9 @@ const App: React.FC = () => {
       {boxes.map((boxProps: BoxObject, index: number) => (
         <Box
           key={index.toString()}
-          id={index.toString()}
+          index={index}
           position={boxProps.position}
-          updateBlocked={updateBlocked}
+          updateBlocked={boxProps.updateBlocked}
           isBlocked={boxProps.isBlocked}
         />
       ))}

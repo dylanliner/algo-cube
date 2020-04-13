@@ -2,13 +2,25 @@ import React, { useRef, useState, useEffect } from "react";
 import { useFrame } from "react-three-fiber";
 import * as THREE from "three";
 
-export interface BoxObject {
-  index: number;
+export class BoxObject {
   position: [number, number, number];
-  isBlocked: boolean;
-  isStartNode: boolean;
-  isEndNode: boolean;
-  updateBox: (index: number) => void;
+  isBlocked = false;
+  isStartNode = false;
+  isEndNode = false;
+  gCost: number;
+  hCost: number;
+  updateBox: (x: number, y: number) => void;
+
+  constructor() {
+    this.position = [0, 0, 0];
+    this.gCost = 0;
+    this.hCost = 0;
+    this.updateBox = (x: number, y: number) => {};
+  }
+
+  fCost = (): number => {
+    return this.gCost + this.hCost;
+  };
 }
 
 const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
@@ -47,7 +59,7 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
       scale={[0.5, 0.5, 0.5]}
       onClick={(e) => {
         console.log("clicked on box");
-        props.updateBox(props.index);
+        props.updateBox(props.position[0], props.position[1]);
       }}
       onPointerOver={(e) => setHover(true)}
       onPointerOut={(e) => setHover(false)}

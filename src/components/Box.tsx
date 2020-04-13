@@ -3,16 +3,20 @@ import { useFrame } from "react-three-fiber";
 import * as THREE from "three";
 
 export class BoxObject {
-  position: [number, number, number];
+  x: number;
+  y: number;
   isBlocked = false;
   isStartNode = false;
   isEndNode = false;
   gCost: number;
   hCost: number;
   updateBox: (x: number, y: number) => void;
+  parent: BoxObject | undefined;
+  isPath = false;
 
   constructor() {
-    this.position = [0, 0, 0];
+    this.x = 0;
+    this.y = 0;
     this.gCost = 0;
     this.hCost = 0;
     this.updateBox = (x: number, y: number) => {};
@@ -26,7 +30,7 @@ export class BoxObject {
 const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
   // This reference will give us direct access to the mesh
   const mesh = useRef(new THREE.Mesh());
-  console.log("I am a box and rerendering", props.position);
+  console.log("I am a box and rerendering", props.x, props.y);
 
   // Set up state for the hovered and active state
   const [hovered, setHover] = useState(false);
@@ -43,7 +47,7 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
         color = "blue";
       } else if (props.isEndNode) {
         color = "green";
-      } else if (hovered) {
+      } else if (props.isPath || hovered) {
         color = "red";
       } else {
         color = "orange";
@@ -51,15 +55,21 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
       setColor(color);
     };
     getColor();
-  }, [hovered, props.isBlocked, props.isEndNode, props.isStartNode]);
+  }, [
+    hovered,
+    props.isBlocked,
+    props.isEndNode,
+    props.isPath,
+    props.isStartNode,
+  ]);
   return (
     <mesh
-      position={props.position}
+      position={[props.x, props.y, 0]}
       ref={mesh}
       scale={[0.5, 0.5, 0.5]}
       onClick={(e) => {
         console.log("clicked on box");
-        props.updateBox(props.position[0], props.position[1]);
+        props.updateBox(props.x, props.y);
       }}
       onPointerOver={(e) => setHover(true)}
       onPointerOut={(e) => setHover(false)}

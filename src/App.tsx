@@ -89,7 +89,8 @@ const App: React.FC = () => {
         boxArray.push([]);
         for (let y = 0; y < size; y++) {
           const box = new BoxObject();
-          box.position = [i, y, 0] as [number, number, number];
+          box.x = i;
+          box.y = y;
           box.updateBox = updateBox;
           boxArray[i][y] = box;
         }

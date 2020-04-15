@@ -47,7 +47,7 @@ export const pathFinder = (
   const endNode = boxes[endNodeIndex[0]][endNodeIndex[1]];
 
   //Set of nodes to be evaluated
-  const openSet = new Array<BoxObject>();
+  let openSet = new Array<BoxObject>();
 
   //Set of nodes already evaluated
   const closedSet = new Set<BoxObject>();
@@ -65,13 +65,10 @@ export const pathFinder = (
         currentNode = openSet[i];
       }
     }
-    openSet.splice(
-      openSet.findIndex(
-        (node) => node.x === currentNode.x && node.y === currentNode.y
-      ),
-      1
-    );
 
+    openSet = openSet.filter(
+      (node) => node.x !== currentNode.x && node.y !== currentNode.y
+    );
     closedSet.add(currentNode);
 
     if (currentNode === endNode) {
@@ -82,15 +79,17 @@ export const pathFinder = (
     const neighboringNodes = getNeighboringNodes(currentNode, boxes);
     neighboringNodes.forEach((neighbor) => {
       if (!neighbor.isBlocked && !closedSet.has(neighbor)) {
-        const newNeighborGCost =
-          currentNode.gCost + getDistanceBetweenNodes(currentNode, neighbor);
-        if (newNeighborGCost < neighbor.gCost || !openSet.includes(neighbor)) {
+        const newNeighborGCost = getDistanceBetweenNodes(currentNode, neighbor);
+        if (
+          newNeighborGCost < neighbor.gCost ||
+          !openSet.find(
+            (node) => node.x === neighbor.x && node.y === neighbor.y
+          )
+        ) {
           neighbor.gCost = newNeighborGCost;
           neighbor.hCost = getDistanceBetweenNodes(endNode, neighbor);
           neighbor.parent = currentNode;
-          if (!openSet.includes(neighbor)) {
-            openSet.push(neighbor);
-          }
+          openSet.push(neighbor);
         }
       }
     });

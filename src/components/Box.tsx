@@ -13,6 +13,7 @@ export class BoxObject {
   updateBox: (x: number, y: number) => void;
   parent: BoxObject | undefined;
   isPath = false;
+  heapIndex: number;
 
   constructor() {
     this.x = 0;
@@ -20,6 +21,7 @@ export class BoxObject {
     this.gCost = 0;
     this.hCost = 0;
     this.updateBox = (x: number, y: number) => {};
+    this.heapIndex = 0;
   }
 
   fCost = (): number => {

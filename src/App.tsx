@@ -3,9 +3,11 @@ import "./App.css";
 import { Canvas, useFrame } from "react-three-fiber";
 import Box from "./components/Box";
 import { pathFinder } from "./components/PathFinder";
+import { pathFinderHeapOptimized } from "./components/PathFinderHeapOptimized";
 import { BoxObject } from "./components/Box";
 import Button from "@material-ui/core/Button";
 import update from "immutability-helper";
+import TextField from "@material-ui/core/TextField";
 
 export enum SelectionMode {
   StartNode,
@@ -22,21 +24,23 @@ const App: React.FC = () => {
   });
   const [endNode, setEndNode] = useState([0, 0] as [number, number]);
   const [startNode, setStartNode] = useState([0, 0] as [number, number]);
+  const [gridSize, setGridSize] = useState(10);
+  const [errorText, setErrorText] = useState("");
 
   console.log("I am the grid and am rerendering");
-
-  const size = 10;
-  const cameraCenter = size / 2 - 1;
+  const cameraCenter = gridSize / 2 - 1;
+  const zoom = gridSize - 1;
   const style = {
     width: "90vw",
     height: "90vh",
   };
 
+  //FIXME Runs all the time, needs to change
   function CustomCamera() {
     useFrame((state) => {
       state.camera.position.x = cameraCenter;
       state.camera.position.y = cameraCenter;
-      state.camera.position.z = 9;
+      state.camera.position.z = zoom;
       state.camera.updateProjectionMatrix();
     });
     return null;
@@ -85,9 +89,9 @@ const App: React.FC = () => {
     function createGrid() {
       console.log("I am in create Grid");
       const boxArray: BoxObject[][] = [];
-      for (let i = 0; i < size; i++) {
+      for (let i = 0; i < gridSize; i++) {
         boxArray.push([]);
-        for (let y = 0; y < size; y++) {
+        for (let y = 0; y < gridSize; y++) {
           const box = new BoxObject();
           box.x = i;
           box.y = y;
@@ -99,7 +103,7 @@ const App: React.FC = () => {
       setGrid({ boxes: boxArray, selectionMode: SelectionMode.StartNode });
     }
     createGrid();
-  }, [reload]);
+  }, [gridSize, reload]);
 
   const handleChange = (): void => {
     let newSelectionMode;
@@ -132,6 +136,21 @@ const App: React.FC = () => {
 
   return (
     <>
+      <TextField
+        label="Grid size"
+        defaultValue={10}
+        error={errorText.length === 0 ? false : true}
+        helperText={errorText}
+        onChange={(e) => {
+          const gridSize = Number(e.target.value);
+          if (gridSize) {
+            setGridSize(Math.floor(gridSize));
+            setErrorText("");
+          } else {
+            setErrorText("Please enter a number");
+          }
+        }}
+      />
       <Button onClick={handleChange} variant="contained">
         {grid.selectionMode === SelectionMode.BlockedNodes
           ? "Click here when you are done"
@@ -145,6 +164,15 @@ const App: React.FC = () => {
         disabled={grid.selectionMode !== SelectionMode.Final}
       >
         Find Path
+      </Button>
+      <Button
+        onClick={() => {
+          pathFinderHeapOptimized(grid.boxes, startNode, endNode, updateGrid);
+        }}
+        variant="contained"
+        disabled={grid.selectionMode !== SelectionMode.Final}
+      >
+        Find Path Heap Optimized
       </Button>
 
       <Canvas style={style}>

@@ -21,7 +21,7 @@ export class BoxObject {
     this.gCost = 0;
     this.hCost = 0;
     this.updateBox = (x: number, y: number) => {};
-    this.heapIndex = 0;
+    this.heapIndex = -1;
   }
 
   fCost = (): number => {

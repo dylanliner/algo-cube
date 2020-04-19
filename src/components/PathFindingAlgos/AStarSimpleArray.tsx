@@ -1,46 +1,17 @@
-import { BoxObject } from "./Box";
+import { BoxObject } from "../Box";
+import {
+  renderPath,
+  getNeighboringNodes,
+  getDistanceBetweenNodes,
+} from "./HelperFunctions";
 
-//Maybe put it in app.tsx
-const getNeighboringNodes = (
-  node: BoxObject,
-  nodes: BoxObject[][]
-): Array<BoxObject> => {
-  const neighboringNodes = new Array<BoxObject>();
-
-  for (let i = node.x - 1; i <= node.x + 1; i++) {
-    if (i < nodes.length && i >= 0)
-      for (let y = node.y - 1; y <= node.y + 1; y++) {
-        if (y < nodes[i].length && y >= 0 && node !== nodes[i][y])
-          neighboringNodes.push(nodes[i][y]);
-      }
-  }
-  return neighboringNodes;
-};
-
-const renderPath = (currentNode: BoxObject | undefined) => {
-  while (currentNode) {
-    currentNode.isPath = true;
-    currentNode = currentNode.parent;
-  }
-};
-
-const getDistanceBetweenNodes = (nodeA: BoxObject, nodeB: BoxObject) => {
-  const distX = Math.abs(nodeA.x - nodeB.x);
-  const distY = Math.abs(nodeA.y - nodeB.y);
-
-  if (distX > distY) {
-    return distY * 14 + 10 * (distX - distY);
-  } else {
-    return distX * 14 + 10 * (distY - distX);
-  }
-};
-
-export const pathFinder = (
+export const aStarSimpleArray = (
   boxes: BoxObject[][],
   startNodeIndex: [number, number],
   endNodeIndex: [number, number],
   updateGrid: (boxes: BoxObject[][]) => void
 ): void => {
+  const t0 = performance.now();
   console.log("I am in PathFinder");
 
   const startNode = boxes[startNodeIndex[0]][startNodeIndex[1]];
@@ -76,6 +47,8 @@ export const pathFinder = (
 
     if (currentNode === endNode) {
       renderPath(currentNode);
+      const t1 = performance.now();
+      console.log("Call to pathFinder took " + (t1 - t0) + " milliseconds.");
       updateGrid(boxes);
       break;
     }
@@ -86,9 +59,10 @@ export const pathFinder = (
           currentNode.gCost + getDistanceBetweenNodes(currentNode, neighbor);
         if (newNeighborGCost < neighbor.gCost || !openSet.includes(neighbor)) {
           neighbor.gCost = newNeighborGCost;
-          neighbor.hCost = getDistanceBetweenNodes(endNode, neighbor);
+
           neighbor.parent = currentNode;
           if (!openSet.includes(neighbor)) {
+            neighbor.hCost = getDistanceBetweenNodes(endNode, neighbor);
             openSet.push(neighbor);
           }
         }

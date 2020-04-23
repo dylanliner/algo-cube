@@ -1,9 +1,5 @@
 import { BoxObject } from "../Box";
-import {
-  renderPath,
-  getNeighboringNodes,
-  getDistanceBetweenNodes,
-} from "./HelperFunctions";
+import { renderPath, getNeighboringNodesDiagonalLast } from "./HelperFunctions";
 
 export const breadthFirstSearch = (
   boxes: BoxObject[][],
@@ -11,7 +7,6 @@ export const breadthFirstSearch = (
   endNodeIndex: [number, number],
   updateGrid: (boxes: BoxObject[][]) => void
 ): void => {
-  const t0 = performance.now();
   console.log("I am in breadthFirstSearch");
 
   const startNode = boxes[startNodeIndex[0]][startNodeIndex[1]];
@@ -29,15 +24,14 @@ export const breadthFirstSearch = (
     if (currentNode) {
       if (currentNode === endNode) {
         renderPath(currentNode);
-        const t1 = performance.now();
-        console.log(
-          "Call to pathFinderHeapOptimized took " + (t1 - t0) + " milliseconds."
-        );
         updateGrid(boxes);
         break;
       }
 
-      const neighboringNodes = getNeighboringNodes(currentNode, boxes);
+      const neighboringNodes = getNeighboringNodesDiagonalLast(
+        currentNode,
+        boxes
+      );
       neighboringNodes.forEach((neighbor) => {
         if (!neighbor.isBlocked && !closedSet.has(neighbor)) {
           neighbor.parent = currentNode;

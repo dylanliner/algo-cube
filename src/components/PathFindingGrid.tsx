@@ -25,7 +25,7 @@ interface RunButton {
     endNodeIndex: [number, number],
     updateGrid: (boxes: BoxObject[][]) => void
   ) => void;
-  executionTime?: number;
+  executionTime?: string;
 }
 
 const PathFindingGrid: React.FC = () => {
@@ -52,18 +52,22 @@ const PathFindingGrid: React.FC = () => {
     {
       label: "A* Simple Array",
       pathFindingAlgo: aStarSimpleArray,
+      executionTime: "",
     },
     {
       label: "A* Heap Optimized",
       pathFindingAlgo: aStarBinaryHeap,
+      executionTime: "",
     },
     {
       label: "Breadth First Search",
       pathFindingAlgo: breadthFirstSearch,
+      executionTime: "",
     },
     {
       label: "Dijkstra Algorithm",
       pathFindingAlgo: dijkstraAlgorithm,
+      executionTime: "",
     },
   ]);
 
@@ -164,6 +168,29 @@ const PathFindingGrid: React.FC = () => {
     });
   };
 
+  const cleanUpGrid = () => {
+    grid.boxes.forEach((column) =>
+      column.forEach((box) => {
+        box.heapIndex = -1;
+        box.isPath = false;
+        box.gCost = 0;
+        box.hCost = 0;
+        box.parent = undefined;
+      })
+    );
+    setGrid({
+      selectionMode: grid.selectionMode,
+      boxes: grid.boxes,
+    });
+  };
+
+  const updateExecutionTime = (t1: number, t0: number, index: number): void => {
+    const executionTime = "executed in " + (t1 - t0).toFixed(2) + " ms";
+    setButtons(
+      update(buttons, { [index]: { executionTime: { $set: executionTime } } })
+    );
+  };
+
   return (
     <>
       <Grid container justify="center" alignItems="center">
@@ -200,24 +227,28 @@ const PathFindingGrid: React.FC = () => {
               </Button>
             </Grid>
             {buttons.map((runButton: RunButton, index: number) => (
-              <>
-                <Grid item>
-                  <Button
-                    onClick={() => {
-                      return runButton.pathFindingAlgo(
-                        grid.boxes,
-                        startNode,
-                        endNode,
-                        updateGrid
-                      );
-                    }}
-                    variant="contained"
-                    disabled={grid.selectionMode !== SelectionMode.Final}
-                  >
-                    {runButton.label}
-                  </Button>
-                </Grid>
-              </>
+              <Grid item key={index.toString()}>
+                <Button
+                  onClick={() => {
+                    cleanUpGrid();
+                    const t0 = performance.now();
+                    runButton.pathFindingAlgo(
+                      grid.boxes,
+                      startNode,
+                      endNode,
+                      updateGrid
+                    );
+                    const t1 = performance.now();
+                    updateExecutionTime(t1, t0, index);
+                  }}
+                  variant="contained"
+                  disabled={grid.selectionMode !== SelectionMode.Final}
+                >
+                  {runButton.label}
+                </Button>
+                <br />
+                {runButton.executionTime}
+              </Grid>
             ))}
           </Grid>
         </Grid>

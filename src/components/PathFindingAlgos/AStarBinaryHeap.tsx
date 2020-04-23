@@ -12,7 +12,6 @@ export const aStarBinaryHeap = (
   endNodeIndex: [number, number],
   updateGrid: (boxes: BoxObject[][]) => void
 ): void => {
-  const t0 = performance.now();
   console.log("I am in aStarBinaryHeap");
 
   const startNode = boxes[startNodeIndex[0]][startNodeIndex[1]];
@@ -33,10 +32,6 @@ export const aStarBinaryHeap = (
 
     if (currentNode === endNode) {
       renderPath(currentNode);
-      const t1 = performance.now();
-      console.log(
-        "Call to pathFinderHeapOptimized took " + (t1 - t0) + " milliseconds."
-      );
       updateGrid(boxes);
       break;
     }

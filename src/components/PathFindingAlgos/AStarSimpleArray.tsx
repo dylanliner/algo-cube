@@ -11,7 +11,6 @@ export const aStarSimpleArray = (
   endNodeIndex: [number, number],
   updateGrid: (boxes: BoxObject[][]) => void
 ): void => {
-  const t0 = performance.now();
   console.log("I am in aStarSimpleArray");
 
   const startNode = boxes[startNodeIndex[0]][startNodeIndex[1]];
@@ -47,8 +46,6 @@ export const aStarSimpleArray = (
 
     if (currentNode === endNode) {
       renderPath(currentNode);
-      const t1 = performance.now();
-      console.log("Call to pathFinder took " + (t1 - t0) + " milliseconds.");
       updateGrid(boxes);
       break;
     }

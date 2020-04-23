@@ -17,6 +17,17 @@ export enum SelectionMode {
   Final,
 }
 
+interface RunButton {
+  label: string;
+  pathFindingAlgo: (
+    boxes: BoxObject[][],
+    startNodeIndex: [number, number],
+    endNodeIndex: [number, number],
+    updateGrid: (boxes: BoxObject[][]) => void
+  ) => void;
+  executionTime?: number;
+}
+
 const PathFindingGrid: React.FC = () => {
   const [reload, setReload] = useState(true);
   const [grid, setGrid] = useState({
@@ -27,6 +38,34 @@ const PathFindingGrid: React.FC = () => {
   const [startNode, setStartNode] = useState([0, 0] as [number, number]);
   const [gridSize, setGridSize] = useState(10);
   const [errorText, setErrorText] = useState("");
+
+  const updateGrid = (newBoxes: BoxObject[][]): void => {
+    setGrid((grid) => {
+      return {
+        boxes: update(grid.boxes, { $set: newBoxes }),
+        selectionMode: grid.selectionMode,
+      };
+    });
+  };
+
+  const [buttons, setButtons] = useState([
+    {
+      label: "A* Simple Array",
+      pathFindingAlgo: aStarSimpleArray,
+    },
+    {
+      label: "A* Heap Optimized",
+      pathFindingAlgo: aStarBinaryHeap,
+    },
+    {
+      label: "Breadth First Search",
+      pathFindingAlgo: breadthFirstSearch,
+    },
+    {
+      label: "Dijkstra Algorithm",
+      pathFindingAlgo: dijkstraAlgorithm,
+    },
+  ]);
 
   console.log("I am the grid and am rerendering");
   const cameraCenter = gridSize / 2 - 1;
@@ -125,19 +164,10 @@ const PathFindingGrid: React.FC = () => {
     });
   };
 
-  const updateGrid = (newBoxes: BoxObject[][]): void => {
-    setGrid((grid) => {
-      return {
-        boxes: update(grid.boxes, { $set: newBoxes }),
-        selectionMode: grid.selectionMode,
-      };
-    });
-  };
-
   return (
     <>
       <Grid container justify="center" alignItems="center">
-        <Grid item xs={6}>
+        <Grid item xs={4}>
           <Grid
             container
             direction="column"
@@ -169,58 +199,29 @@ const PathFindingGrid: React.FC = () => {
                   : "Click here to select block nodes"}
               </Button>
             </Grid>
-            <Grid item>
-              <Button
-                onClick={() => {
-                  aStarSimpleArray(grid.boxes, startNode, endNode, updateGrid);
-                }}
-                variant="contained"
-                disabled={grid.selectionMode !== SelectionMode.Final}
-              >
-                A* Simple Array
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={() => {
-                  aStarBinaryHeap(grid.boxes, startNode, endNode, updateGrid);
-                }}
-                variant="contained"
-                disabled={grid.selectionMode !== SelectionMode.Final}
-              >
-                A* Heap Optimized
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={() => {
-                  breadthFirstSearch(
-                    grid.boxes,
-                    startNode,
-                    endNode,
-                    updateGrid
-                  );
-                }}
-                variant="contained"
-                disabled={grid.selectionMode !== SelectionMode.Final}
-              >
-                Breadth First Search
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={() => {
-                  dijkstraAlgorithm(grid.boxes, startNode, endNode, updateGrid);
-                }}
-                variant="contained"
-                disabled={grid.selectionMode !== SelectionMode.Final}
-              >
-                Dijkstra Algorithm
-              </Button>
-            </Grid>
+            {buttons.map((runButton: RunButton, index: number) => (
+              <>
+                <Grid item>
+                  <Button
+                    onClick={() => {
+                      return runButton.pathFindingAlgo(
+                        grid.boxes,
+                        startNode,
+                        endNode,
+                        updateGrid
+                      );
+                    }}
+                    variant="contained"
+                    disabled={grid.selectionMode !== SelectionMode.Final}
+                  >
+                    {runButton.label}
+                  </Button>
+                </Grid>
+              </>
+            ))}
           </Grid>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={8}>
           <Canvas style={style}>
             <ambientLight />
             <pointLight position={[10, 10, 10]} />

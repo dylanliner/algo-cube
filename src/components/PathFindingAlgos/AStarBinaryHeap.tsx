@@ -13,7 +13,7 @@ export const aStarBinaryHeap = (
   updateGrid: (boxes: BoxObject[][]) => void
 ): void => {
   const t0 = performance.now();
-  console.log("I am in PathFinder");
+  console.log("I am in aStarBinaryHeap");
 
   const startNode = boxes[startNodeIndex[0]][startNodeIndex[1]];
   const endNode = boxes[endNodeIndex[0]][endNodeIndex[1]];
@@ -47,7 +47,6 @@ export const aStarBinaryHeap = (
           currentNode.gCost + getDistanceBetweenNodes(currentNode, neighbor);
         if (newNeighborGCost < neighbor.gCost || neighbor.heapIndex === -1) {
           neighbor.gCost = newNeighborGCost;
-
           neighbor.parent = currentNode;
           if (neighbor.heapIndex === -1) {
             neighbor.hCost = getDistanceBetweenNodes(endNode, neighbor);

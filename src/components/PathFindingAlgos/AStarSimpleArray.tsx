@@ -12,7 +12,7 @@ export const aStarSimpleArray = (
   updateGrid: (boxes: BoxObject[][]) => void
 ): void => {
   const t0 = performance.now();
-  console.log("I am in PathFinder");
+  console.log("I am in aStarSimpleArray");
 
   const startNode = boxes[startNodeIndex[0]][startNodeIndex[1]];
   const endNode = boxes[endNodeIndex[0]][endNodeIndex[1]];

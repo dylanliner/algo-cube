@@ -33,3 +33,14 @@ export const getDistanceBetweenNodes = (nodeA: BoxObject, nodeB: BoxObject) => {
     return distX * 14 + 10 * (distY - distX);
   }
 };
+
+export const renderPathCameFrom = (
+  currentNode: BoxObject,
+  cameFrom: Map<BoxObject, BoxObject>
+) => {
+  let parent = cameFrom.get(currentNode);
+  while (parent) {
+    parent.isPath = true;
+    parent = cameFrom.get(parent);
+  }
+};

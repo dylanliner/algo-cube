@@ -54,14 +54,17 @@ export const getNeighboringNodesDiagonalLast = (
   return neighboringNodes;
 };
 
-export const renderPath = (currentNode: BoxObject | undefined) => {
-  while (currentNode) {
+export const renderPath = (currentNode: BoxObject): void => {
+  while (currentNode.parent) {
     currentNode.isPath = true;
     currentNode = currentNode.parent;
   }
 };
 
-export const getDistanceBetweenNodes = (nodeA: BoxObject, nodeB: BoxObject) => {
+export const getDistanceBetweenNodes = (
+  nodeA: BoxObject,
+  nodeB: BoxObject
+): number => {
   const distX = Math.abs(nodeA.x - nodeB.x);
   const distY = Math.abs(nodeA.y - nodeB.y);
 

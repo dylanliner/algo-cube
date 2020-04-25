@@ -21,8 +21,8 @@ interface RunButton {
   label: string;
   pathFindingAlgo: (
     boxes: BoxObject[][],
-    startNodeIndex: [number, number],
-    endNodeIndex: [number, number],
+    startNodeIndex: BoxObject,
+    endNodeIndex: BoxObject,
     updateGrid: (boxes: BoxObject[][]) => void
   ) => void;
   executionTime?: string;
@@ -34,8 +34,8 @@ const PathFindingGrid: React.FC = () => {
     selectionMode: SelectionMode.StartNode,
     boxes: [[new BoxObject()]],
   });
-  const [endNode, setEndNode] = useState([0, 0] as [number, number]);
-  const [startNode, setStartNode] = useState([0, 0] as [number, number]);
+  const [endNode, setEndNode] = useState<BoxObject>(new BoxObject());
+  const [startNode, setStartNode] = useState<BoxObject>(new BoxObject());
   const [gridSize, setGridSize] = useState(10);
   const [errorText, setErrorText] = useState("");
 
@@ -48,26 +48,22 @@ const PathFindingGrid: React.FC = () => {
     });
   };
 
-  const [buttons, setButtons] = useState([
+  const [buttons, setButtons] = useState<RunButton[]>([
     {
       label: "A* Simple Array",
       pathFindingAlgo: aStarSimpleArray,
-      executionTime: "",
     },
     {
       label: "A* Heap Optimized",
       pathFindingAlgo: aStarBinaryHeap,
-      executionTime: "",
     },
     {
       label: "Breadth First Search",
       pathFindingAlgo: breadthFirstSearch,
-      executionTime: "",
     },
     {
       label: "Dijkstra Algorithm",
       pathFindingAlgo: dijkstraAlgorithm,
-      executionTime: "",
     },
   ]);
 
@@ -101,16 +97,16 @@ const PathFindingGrid: React.FC = () => {
         switch (grid.selectionMode) {
           case SelectionMode.StartNode:
             if (!newBox.isBlocked) {
-              setStartNode([x, y]);
               newSelectionMode = SelectionMode.EndNode;
               newBox.isStartNode = true;
+              setStartNode(newBox);
             }
             break;
           case SelectionMode.EndNode:
             if (!newBox.isStartNode && !newBox.isBlocked) {
-              setEndNode([x, y]);
               newSelectionMode = SelectionMode.Final;
               newBox.isEndNode = true;
+              setEndNode(newBox);
             }
             break;
           case SelectionMode.Final:
@@ -168,7 +164,7 @@ const PathFindingGrid: React.FC = () => {
     });
   };
 
-  const cleanUpGrid = () => {
+  const cleanUpGrid = (): void => {
     grid.boxes.forEach((column) =>
       column.forEach((box) => {
         box.heapIndex = -1;

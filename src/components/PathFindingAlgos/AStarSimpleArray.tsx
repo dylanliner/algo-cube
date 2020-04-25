@@ -7,14 +7,11 @@ import {
 
 export const aStarSimpleArray = (
   boxes: BoxObject[][],
-  startNodeIndex: [number, number],
-  endNodeIndex: [number, number],
+  startNode: BoxObject,
+  endNode: BoxObject,
   updateGrid: (boxes: BoxObject[][]) => void
 ): void => {
   console.log("I am in aStarSimpleArray");
-
-  const startNode = boxes[startNodeIndex[0]][startNodeIndex[1]];
-  const endNode = boxes[endNodeIndex[0]][endNodeIndex[1]];
 
   //Set of nodes to be evaluated
   const openSet = new Array<BoxObject>();

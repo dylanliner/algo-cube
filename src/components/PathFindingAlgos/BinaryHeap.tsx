@@ -9,14 +9,14 @@ export class BinaryHeap {
     this.length = 0;
   }
 
-  addToTop(node: BoxObject) {
+  addToTop(node: BoxObject): void {
     node.heapIndex = this.length;
     this.nodes[this.length] = node;
     this.sortUp(node);
     this.length++;
   }
 
-  sortUp(node: BoxObject) {
+  sortUp(node: BoxObject): void {
     let currentNode = node;
     while (currentNode.heapIndex > 0) {
       const parentIndex = Math.floor((currentNode.heapIndex - 1) / 2);
@@ -28,7 +28,7 @@ export class BinaryHeap {
     }
   }
 
-  swapNodes(nodeA: BoxObject, nodeB: BoxObject) {
+  swapNodes(nodeA: BoxObject, nodeB: BoxObject): void {
     const nodeAHeapIndex = nodeA.heapIndex;
     this.nodes[nodeAHeapIndex] = nodeB;
     this.nodes[nodeB.heapIndex] = nodeA;
@@ -46,7 +46,7 @@ export class BinaryHeap {
     return firstItem;
   }
 
-  sortDown(node: BoxObject) {
+  sortDown(node: BoxObject): void {
     while (node.heapIndex < this.length) {
       const childIndexLeft = node.heapIndex * 2 + 1;
       const childIndexRight = childIndexLeft + 1;

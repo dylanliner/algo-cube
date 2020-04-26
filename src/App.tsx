@@ -3,24 +3,54 @@ import PathFinding from "./components/PathFindingGrid";
 import "./App.css";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
+import {
+  Link as RouterLink,
+  Switch,
+  Route,
+  BrowserRouter as Router,
+  Redirect,
+} from "react-router-dom";
+import Searching from "./components/Searching";
+import Sorting from "./components/Sorting";
+import TravellingSalesman from "./components/TravellingSalesman";
 
 const App: React.FC = () => {
   return (
     <>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6">News</Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-      <PathFinding />
+      <Router>
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <Button color="inherit" component={RouterLink} to="/path-finding">
+              Path Finding
+            </Button>
+            <Button color="inherit" component={RouterLink} to="/sorting">
+              Sorting
+            </Button>
+            <Button color="inherit" component={RouterLink} to="/searching">
+              Searching
+            </Button>
+            <Button color="inherit" component={RouterLink} to="/tsp">
+              Traveling Salesman Problem
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <Switch>
+          <Redirect exact from="/" to="path-finding" />
+          <Route path="/path-finding">
+            <PathFinding />
+          </Route>
+          <Route path="/sorting">
+            <Sorting />
+          </Route>
+          <Route path="/searching">
+            <Searching />
+          </Route>
+          <Route path="/tsp">
+            <TravellingSalesman />
+          </Route>
+        </Switch>
+      </Router>
     </>
   );
 };

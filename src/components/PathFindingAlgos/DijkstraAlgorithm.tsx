@@ -9,7 +9,8 @@ export const dijkstraAlgorithm = (
   boxes: BoxObject[][],
   startNode: BoxObject,
   endNode: BoxObject,
-  updateGrid: (boxes: BoxObject[][]) => void
+  updateGrid: (boxes: BoxObject[][]) => void,
+  setOpenDialog: (bool: boolean) => void
 ): void => {
   console.log("I am in dijkstraAlgorithm");
   //Open List, to visit
@@ -25,7 +26,7 @@ export const dijkstraAlgorithm = (
     if (currentNode === endNode) {
       renderPath(currentNode);
       updateGrid(boxes);
-      break;
+      return;
     }
 
     const neighboringNodes = getNeighboringNodes(currentNode, boxes);
@@ -45,4 +46,5 @@ export const dijkstraAlgorithm = (
       }
     });
   }
+  setOpenDialog(true);
 };

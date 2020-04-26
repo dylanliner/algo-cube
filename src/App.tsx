@@ -31,7 +31,7 @@ const App: React.FC = () => {
               Searching
             </Button>
             <Button color="inherit" component={RouterLink} to="/tsp">
-              Traveling Salesman Problem
+              Travelling Salesman Problem
             </Button>
           </Toolbar>
         </AppBar>

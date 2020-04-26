@@ -10,6 +10,10 @@ import Button from "@material-ui/core/Button";
 import update from "immutability-helper";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
 export enum SelectionMode {
   StartNode,
   EndNode,
@@ -23,7 +27,8 @@ interface RunButton {
     boxes: BoxObject[][],
     startNodeIndex: BoxObject,
     endNodeIndex: BoxObject,
-    updateGrid: (boxes: BoxObject[][]) => void
+    updateGrid: (boxes: BoxObject[][]) => void,
+    setOpenDialog: (bool: boolean) => void
   ) => void;
   executionTime?: string;
 }
@@ -37,6 +42,7 @@ const PathFindingGrid: React.FC = () => {
   const [endNode, setEndNode] = useState<BoxObject>(new BoxObject());
   const [startNode, setStartNode] = useState<BoxObject>(new BoxObject());
   const [gridSize, setGridSize] = useState(10);
+  const [openDialog, setOpenDialog] = useState(false);
   const [errorText, setErrorText] = useState("");
 
   const updateGrid = (newBoxes: BoxObject[][]): void => {
@@ -50,11 +56,11 @@ const PathFindingGrid: React.FC = () => {
 
   const [buttons, setButtons] = useState<RunButton[]>([
     {
-      label: "A* Simple Array",
+      label: "A* (Simple Array)",
       pathFindingAlgo: aStarSimpleArray,
     },
     {
-      label: "A* Heap Optimized",
+      label: "A* (Binary Heap)",
       pathFindingAlgo: aStarBinaryHeap,
     },
     {
@@ -174,10 +180,6 @@ const PathFindingGrid: React.FC = () => {
         box.parent = undefined;
       })
     );
-    setGrid({
-      selectionMode: grid.selectionMode,
-      boxes: grid.boxes,
-    });
   };
 
   const updateExecutionTime = (t1: number, t0: number, index: number): void => {
@@ -232,7 +234,8 @@ const PathFindingGrid: React.FC = () => {
                       grid.boxes,
                       startNode,
                       endNode,
-                      updateGrid
+                      updateGrid,
+                      setOpenDialog
                     );
                     const t1 = performance.now();
                     updateExecutionTime(t1, t0, index);
@@ -261,6 +264,21 @@ const PathFindingGrid: React.FC = () => {
           </Canvas>
         </Grid>
       </Grid>
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Destination unreachable"}
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

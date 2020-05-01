@@ -13,6 +13,7 @@ export class BoxObject {
   updateBox: (x: number, y: number) => void;
   parent: BoxObject | undefined;
   isPath = false;
+  number: number;
   heapIndex: number;
 
   constructor() {
@@ -20,6 +21,7 @@ export class BoxObject {
     this.y = 0;
     this.gCost = 0;
     this.hCost = 0;
+    this.number = 0;
     this.updateBox = (x: number, y: number) => {};
     this.heapIndex = -1;
   }
@@ -77,7 +79,7 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
       onPointerOut={(e) => setHover(false)}
     >
       <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial attach="material" color={color} />
+      <meshStandardMaterial attach="material" color={color}  />
     </mesh>
   );
 });

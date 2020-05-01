@@ -12,6 +12,7 @@ import { insertionSort } from "./SortingAlgos/InsertionSort";
 import { mergeSort } from "./SortingAlgos/MergeSort";
 import { quickSort } from "./SortingAlgos/QuickSort";
 import { selectionSort } from "./SortingAlgos/SelectionSort";
+import { interpolateTurbo } from "d3-scale-chromatic";
 
 interface RunButton {
   label: string;
@@ -65,10 +66,17 @@ const Sorting: React.FC = () => {
   function CustomCamera() {
     useFrame((state) => {
       state.camera.position.x = cameraCenter;
-      state.camera.position.z = 9;
+      state.camera.position.z = 17;
       state.camera.updateProjectionMatrix();
     });
     return null;
+  }
+  function shuffle(array: any[]) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
 
   useEffect(() => {
@@ -79,9 +87,11 @@ const Sorting: React.FC = () => {
       const initBoxArray: BoxObject[] = [];
       for (let i = 0; i < gridSize; i++) {
         const box = new BoxObject();
-        box.x = i;
+        box.number = i;
+        box.color = interpolateTurbo(i / gridSize);
         initBoxArray.push(box);
       }
+      shuffle(initBoxArray);
       setBoxArray(initBoxArray);
     }
     createBoxArray();
@@ -102,7 +112,7 @@ const Sorting: React.FC = () => {
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             {boxArray.map((boxProps: BoxObject, index: number) => (
-              <Box key={index.toString()} {...boxProps} />
+              <Box key={index.toString()}  {...boxProps} x={index} />
             ))}
             <CustomCamera />
           </Canvas>

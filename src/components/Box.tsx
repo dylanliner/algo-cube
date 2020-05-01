@@ -15,12 +15,14 @@ export class BoxObject {
   isPath = false;
   number: number;
   heapIndex: number;
+  color: string;
 
   constructor() {
     this.x = 0;
     this.y = 0;
     this.gCost = 0;
     this.hCost = 0;
+    this.color = "orange";
     this.number = 0;
     this.updateBox = (x: number, y: number) => {};
     this.heapIndex = -1;
@@ -54,13 +56,14 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
       } else if (props.isPath || hovered) {
         color = "red";
       } else {
-        color = "orange";
+        color = props.color;
       }
       setColor(color);
     };
     getColor();
   }, [
     hovered,
+    props.color,
     props.isBlocked,
     props.isEndNode,
     props.isPath,
@@ -79,7 +82,7 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
       onPointerOut={(e) => setHover(false)}
     >
       <boxBufferGeometry attach="geometry" args={[1, 1, 1]} />
-      <meshStandardMaterial attach="material" color={color}  />
+      <meshStandardMaterial attach="material" color={color} />
     </mesh>
   );
 });

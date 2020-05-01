@@ -12,7 +12,6 @@ import { insertionSort } from "./SortingAlgos/InsertionSort";
 import { mergeSort } from "./SortingAlgos/MergeSort";
 import { quickSort } from "./SortingAlgos/QuickSort";
 import { selectionSort } from "./SortingAlgos/SelectionSort";
-import { interpolateTurbo } from "d3-scale-chromatic";
 
 interface RunButton {
   label: string;
@@ -87,8 +86,7 @@ const Sorting: React.FC = () => {
       const initBoxArray: BoxObject[] = [];
       for (let i = 0; i < gridSize; i++) {
         const box = new BoxObject();
-        box.number = i;
-        box.color = interpolateTurbo(i / gridSize);
+        box.number = i / gridSize;
         initBoxArray.push(box);
       }
       shuffle(initBoxArray);
@@ -112,7 +110,7 @@ const Sorting: React.FC = () => {
             <ambientLight />
             <pointLight position={[10, 10, 10]} />
             {boxArray.map((boxProps: BoxObject, index: number) => (
-              <Box key={index.toString()}  {...boxProps} x={index} />
+              <Box key={index.toString()} {...boxProps} x={index} />
             ))}
             <CustomCamera />
           </Canvas>

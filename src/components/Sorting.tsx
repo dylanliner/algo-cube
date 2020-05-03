@@ -18,7 +18,7 @@ interface RunButton {
   sortingAlgo: (
     boxes: BoxObject[],
     setBoxArray: (boxes: BoxObject[]) => void
-  ) => void;
+  ) => void; 
   executionTime?: string;
 }
 

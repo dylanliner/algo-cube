@@ -18,7 +18,7 @@ interface RunButton {
   sortingAlgo: (
     boxes: BoxObject[],
     setBoxArray: (boxes: BoxObject[]) => void
-  ) => void; 
+  ) => void;
   executionTime?: string;
 }
 
@@ -65,7 +65,7 @@ const Sorting: React.FC = () => {
   function CustomCamera() {
     useFrame((state) => {
       state.camera.position.x = cameraCenter;
-      state.camera.position.z = 17;
+      state.camera.position.z = 10;
       state.camera.updateProjectionMatrix();
     });
     return null;

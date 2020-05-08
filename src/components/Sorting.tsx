@@ -11,6 +11,7 @@ import { heapSort } from "./SortingAlgos/HeapSort";
 import { insertionSort } from "./SortingAlgos/InsertionSort";
 import { mergeSort } from "./SortingAlgos/MergeSort";
 import { quickSort } from "./SortingAlgos/QuickSort";
+import { quickSortMedianOfThree } from "./SortingAlgos/QuickSortMedianOfThree";
 import { selectionSort } from "./SortingAlgos/SelectionSort";
 
 interface RunButton {
@@ -24,7 +25,7 @@ interface RunButton {
 
 const Sorting: React.FC = () => {
   const [boxArray, setBoxArray] = useState([new BoxObject()]);
-
+  const [prevBoxArray, setPrevBoxArray] = useState<BoxObject[]>([]);
   const [gridSize, setGridSize] = useState(30);
   const [errorText, setErrorText] = useState("");
   const [buttons, setButtons] = useState<RunButton[]>([
@@ -33,8 +34,8 @@ const Sorting: React.FC = () => {
       sortingAlgo: bubbleSort,
     },
     {
-      label: "Heap Sort",
-      sortingAlgo: heapSort,
+      label: "Selection Sort",
+      sortingAlgo: selectionSort,
     },
     {
       label: "Insertion Sort",
@@ -45,12 +46,16 @@ const Sorting: React.FC = () => {
       sortingAlgo: mergeSort,
     },
     {
-      label: "Quick Sort",
+      label: "Heap Sort",
+      sortingAlgo: heapSort,
+    },
+    {
+      label: "Quick Sort (pivot last index)",
       sortingAlgo: quickSort,
     },
     {
-      label: "Selection Sort",
-      sortingAlgo: selectionSort,
+      label: "Quick Sort (median of three)",
+      sortingAlgo: quickSortMedianOfThree,
     },
   ]);
 
@@ -91,6 +96,7 @@ const Sorting: React.FC = () => {
       }
       shuffle(initBoxArray);
       setBoxArray(initBoxArray);
+      setPrevBoxArray([]);
     }
     createBoxArray();
   }, [gridSize]);
@@ -134,10 +140,22 @@ const Sorting: React.FC = () => {
             }}
           />
         </Grid>
+        <Grid item>
+          <Button
+            onClick={() => {
+              setBoxArray(prevBoxArray);
+            }}
+            variant="contained"
+            color="secondary"
+          >
+            Retry
+          </Button>
+        </Grid>
         {buttons.map((runButton: RunButton, index: number) => (
           <Grid item key={index.toString()}>
             <Button
               onClick={() => {
+                setPrevBoxArray([...boxArray]);
                 const t0 = performance.now();
                 runButton.sortingAlgo(boxArray, setBoxArray);
                 const t1 = performance.now();

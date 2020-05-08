@@ -1,5 +1,4 @@
 import { BoxObject } from "../Box";
-import { RectAreaLight } from "three";
 export const heapSort = (
   boxArray: BoxObject[],
   setBoxArray: (boxArray: BoxObject[]) => void
@@ -33,7 +32,7 @@ export const heapSort = (
       largest = rightChild;
     }
 
-    if (largest != currentIndex) {
+    if (largest !== currentIndex) {
       //swap
       const temp = boxArray[currentIndex];
       boxArray[currentIndex] = boxArray[largest];

@@ -1,5 +1,5 @@
 import { BoxObject } from "../Box";
-export const quickSort = (
+export const quickSortMedianOfThree = (
   boxArray: BoxObject[],
   setBoxArray: (boxArray: BoxObject[]) => void
 ): void => {
@@ -16,8 +16,29 @@ export const quickSort = (
       boxArray[iA] = boxArray[iB];
       boxArray[iB] = temp;
     }
-    //in this version, the last element is the pivot
-    const pivot = boxArray[endIndex].number;
+
+    function medianOfThree(
+      boxArray: BoxObject[],
+      startIndex: number,
+      endIndex: number
+    ): number {
+      const middleIndex = Math.floor((startIndex + endIndex) / 2);
+
+      if (boxArray[endIndex].number < boxArray[startIndex].number) {
+        swap(endIndex, startIndex, boxArray);
+      }
+      if (boxArray[middleIndex].number < boxArray[startIndex].number) {
+        swap(middleIndex, startIndex, boxArray);
+      }
+      if (boxArray[middleIndex].number > boxArray[endIndex].number) {
+        swap(middleIndex, endIndex, boxArray);
+      }
+      return boxArray[middleIndex].number;
+    }
+    //in this version, the pivot is the median element
+    const pivot = medianOfThree(boxArray, startIndex, endIndex);
+    //we swap the pivot with the last element
+    swap(Math.floor((startIndex + endIndex) / 2), endIndex, boxArray);
     //this keeps track of the frontier of the smaller elements
     //it starts at startIndex-1 because it is always incremented
     let lastSmallerThanPivot = startIndex - 1;

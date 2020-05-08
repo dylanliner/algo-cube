@@ -14,6 +14,7 @@ export class BoxObject {
   updateBox: (x: number, y: number) => void;
   parent: BoxObject | undefined;
   isPath = false;
+  found = false;
   number: number;
   heapIndex: number;
   constructor() {

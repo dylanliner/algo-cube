@@ -28,6 +28,7 @@ const Sorting: React.FC = () => {
   const [prevBoxArray, setPrevBoxArray] = useState<BoxObject[]>([]);
   const [gridSize, setGridSize] = useState(30);
   const [errorText, setErrorText] = useState("");
+  const [isSorted, setIsSorted] = useState(false);
   const [buttons, setButtons] = useState<RunButton[]>([
     {
       label: "Bubble Sort",
@@ -144,9 +145,11 @@ const Sorting: React.FC = () => {
           <Button
             onClick={() => {
               setBoxArray(prevBoxArray);
+              setIsSorted(false);
             }}
             variant="contained"
             color="secondary"
+            disabled={prevBoxArray.length === 0}
           >
             Retry
           </Button>
@@ -155,9 +158,10 @@ const Sorting: React.FC = () => {
           <Grid item key={index.toString()}>
             <Button
               onClick={() => {
-                setPrevBoxArray([...boxArray]);
+                if (!isSorted) setPrevBoxArray([...boxArray]);
                 const t0 = performance.now();
                 runButton.sortingAlgo(boxArray, setBoxArray);
+                setIsSorted(true);
                 const t1 = performance.now();
                 updateExecutionTime(t1, t0, index);
               }}

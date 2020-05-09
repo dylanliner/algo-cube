@@ -21,6 +21,7 @@ export class BoxObject {
     this.x = 0;
     this.y = 0;
     this.gCost = 0;
+    this.found = false;
     this.hCost = 0;
     this.number = 0.7;
     this.updateBox = (x: number, y: number) => {};
@@ -40,6 +41,11 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
   // Set up state for the hovered and active state
   const [hovered, setHover] = useState(false);
   const [color, setColor] = useState("orange");
+  const [scale, setScale] = useState<[number, number, number]>([
+    0.5 as number,
+    0.5 as number,
+    0.5 as number,
+  ]);
   // Rotate mesh every frame, this is outside of React without overhead
   useFrame(() => (mesh.current.rotation.x = mesh.current.rotation.y += 0.01));
 
@@ -59,9 +65,15 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
       }
       setColor(color);
     };
+    if (props.found) {
+      setScale([1, 1, 1]);
+    } else {
+      setScale([0.5, 0.5, 0.5]);
+    }
     getColor();
   }, [
     hovered,
+    props.found,
     props.isBlocked,
     props.isEndNode,
     props.isPath,
@@ -72,7 +84,7 @@ const Box: React.FC<BoxObject> = React.memo((props: BoxObject) => {
     <mesh
       position={[props.x, props.y, 0]}
       ref={mesh}
-      scale={[0.5, 0.5, 0.5]}
+      scale={scale}
       onClick={(e) => {
         console.log("clicked on box");
         props.updateBox(props.x, props.y);

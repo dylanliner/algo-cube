@@ -14,7 +14,7 @@ import { ExponentialSearch } from "./SearchingAlgos/ExponentialSearch";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import { quickSort } from "./SortingAlgos/QuickSort";
 interface RunButton {
   label: string;
   searchingAlgo: (
@@ -29,10 +29,10 @@ interface RunButton {
 const Searching: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [boxArray, setBoxArray] = useState([new BoxObject()]);
-  const [prevBoxArray, setPrevBoxArray] = useState<BoxObject[]>([]);
   const [gridSize, setGridSize] = useState(30);
   const [errorText, setErrorText] = useState("");
   const [toSearch, setToSearch] = useState(30);
+  const [isFound, setIsFound] = useState(false);
   const [buttons, setButtons] = useState<RunButton[]>([
     {
       label: "Linear Searh",
@@ -72,13 +72,6 @@ const Searching: React.FC = () => {
     });
     return null;
   }
-  function shuffle(array: any[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
 
   useEffect(() => {
     console.log("I am in useEffect");
@@ -88,12 +81,11 @@ const Searching: React.FC = () => {
       const initBoxArray: BoxObject[] = [];
       for (let i = 0; i < gridSize; i++) {
         const box = new BoxObject();
-        box.number = i / gridSize;
+        box.number =
+          Math.floor(Math.random() * Math.floor(gridSize + 1)) / gridSize;
         initBoxArray.push(box);
       }
-      shuffle(initBoxArray);
-      setBoxArray(initBoxArray);
-      setPrevBoxArray([]);
+      quickSort(initBoxArray, setBoxArray);
     }
     createBoxArray();
   }, [gridSize]);
@@ -103,6 +95,10 @@ const Searching: React.FC = () => {
     setButtons(
       update(buttons, { [index]: { executionTime: { $set: executionTime } } })
     );
+  };
+  const reset = () => {
+    boxArray.forEach((box) => (box.found = false));
+    setBoxArray(boxArray);
   };
 
   return (
@@ -156,12 +152,10 @@ const Searching: React.FC = () => {
         </Grid>
         <Grid item>
           <Button
-            onClick={() => {
-              setBoxArray(prevBoxArray);
-            }}
+            onClick={() => reset()}
             variant="contained"
             color="secondary"
-            disabled={prevBoxArray.length === 0}
+            disabled={!isFound}
           >
             Retry
           </Button>
@@ -170,7 +164,6 @@ const Searching: React.FC = () => {
           <Grid item key={index.toString()}>
             <Button
               onClick={() => {
-                setPrevBoxArray([...boxArray]);
                 const t0 = performance.now();
                 runButton.searchingAlgo(
                   toSearch,
@@ -178,6 +171,7 @@ const Searching: React.FC = () => {
                   setBoxArray,
                   setOpenDialog
                 );
+                setIsFound(true);
                 const t1 = performance.now();
                 updateExecutionTime(t1, t0, index);
               }}
@@ -196,9 +190,7 @@ const Searching: React.FC = () => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Destination unreachable"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Element not found"}</DialogTitle>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)} color="primary">
             OK

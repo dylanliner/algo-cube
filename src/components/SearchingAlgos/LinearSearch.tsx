@@ -6,11 +6,13 @@ export const LinearSearch = (
   setOpenDialog: (bool: boolean) => void
 ): void => {
   console.log("LinearSearch");
+  let foundOne = false;
   boxArray.forEach((box) => {
     if (box.number === x) {
       box.found = true;
+      foundOne = true;
       setBoxArray(boxArray);
-      return;
     }
   });
+  if (!foundOne) setOpenDialog(true);
 };

@@ -13,24 +13,12 @@ import Grid from "@material-ui/core/Grid";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import { RunButton } from "./RunButton";
 export enum SelectionMode {
   StartNode,
   EndNode,
   BlockedNodes,
   Final,
-}
-
-interface RunButton {
-  label: string;
-  pathFindingAlgo: (
-    boxes: BoxObject[][],
-    startNodeIndex: BoxObject,
-    endNodeIndex: BoxObject,
-    updateGrid: (boxes: BoxObject[][]) => void,
-    setOpenDialog: (bool: boolean) => void
-  ) => void;
-  executionTime?: string;
 }
 
 const PathFindingGrid: React.FC = () => {
@@ -230,13 +218,14 @@ const PathFindingGrid: React.FC = () => {
                   onClick={() => {
                     cleanUpGrid();
                     const t0 = performance.now();
-                    runButton.pathFindingAlgo(
-                      grid.boxes,
-                      startNode,
-                      endNode,
-                      updateGrid,
-                      setOpenDialog
-                    );
+                    if (runButton.pathFindingAlgo)
+                      runButton.pathFindingAlgo(
+                        grid.boxes,
+                        startNode,
+                        endNode,
+                        updateGrid,
+                        setOpenDialog
+                      );
                     const t1 = performance.now();
                     updateExecutionTime(t1, t0, index);
                   }}

@@ -15,23 +15,13 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { quickSort } from "./SortingAlgos/QuickSort";
-interface RunButton {
-  label: string;
-  searchingAlgo: (
-    x: number,
-    boxes: BoxObject[],
-    setBoxArray: (boxes: BoxObject[]) => void,
-    setOpenDialog: (bool: boolean) => void
-  ) => void;
-  executionTime?: string;
-}
-
+import { RunButton } from "./RunButton";
 const Searching: React.FC = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [boxArray, setBoxArray] = useState([new BoxObject()]);
   const [gridSize, setGridSize] = useState(30);
   const [errorText, setErrorText] = useState("");
-  const [toSearch, setToSearch] = useState(30);
+  const [toSearch, setToSearch] = useState(15);
   const [isFound, setIsFound] = useState(false);
   const [buttons, setButtons] = useState<RunButton[]>([
     {
@@ -81,8 +71,7 @@ const Searching: React.FC = () => {
       const initBoxArray: BoxObject[] = [];
       for (let i = 0; i < gridSize; i++) {
         const box = new BoxObject();
-        box.number =
-          Math.floor(Math.random() * Math.floor(gridSize + 1)) / gridSize;
+        box.number = Math.floor(Math.random() * gridSize) / gridSize;
         initBoxArray.push(box);
       }
       quickSort(initBoxArray, setBoxArray);
@@ -98,7 +87,7 @@ const Searching: React.FC = () => {
   };
   const reset = () => {
     boxArray.forEach((box) => (box.found = false));
-    setBoxArray(boxArray);
+    setBoxArray([...boxArray]);
   };
 
   return (
@@ -136,7 +125,7 @@ const Searching: React.FC = () => {
         <Grid item>
           <TextField
             label="Find the box (must be within array)"
-            defaultValue={30}
+            defaultValue={15}
             error={errorText.length === 0 ? false : true}
             helperText={errorText}
             onChange={(e) => {
@@ -165,12 +154,13 @@ const Searching: React.FC = () => {
             <Button
               onClick={() => {
                 const t0 = performance.now();
-                runButton.searchingAlgo(
-                  toSearch,
-                  boxArray,
-                  setBoxArray,
-                  setOpenDialog
-                );
+                if (runButton.searchingAlgo)
+                  runButton.searchingAlgo(
+                    toSearch,
+                    boxArray,
+                    setBoxArray,
+                    setOpenDialog
+                  );
                 setIsFound(true);
                 const t1 = performance.now();
                 updateExecutionTime(t1, t0, index);

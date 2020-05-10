@@ -13,16 +13,7 @@ import { mergeSort } from "./SortingAlgos/MergeSort";
 import { quickSort } from "./SortingAlgos/QuickSort";
 import { quickSortMedianOfThree } from "./SortingAlgos/QuickSortMedianOfThree";
 import { selectionSort } from "./SortingAlgos/SelectionSort";
-
-interface RunButton {
-  label: string;
-  sortingAlgo: (
-    boxes: BoxObject[],
-    setBoxArray: (boxes: BoxObject[]) => void
-  ) => void;
-  executionTime?: string;
-}
-
+import { RunButton } from "./RunButton";
 const Sorting: React.FC = () => {
   const [boxArray, setBoxArray] = useState([new BoxObject()]);
   const [prevBoxArray, setPrevBoxArray] = useState<BoxObject[]>([]);
@@ -160,7 +151,8 @@ const Sorting: React.FC = () => {
               onClick={() => {
                 if (!isSorted) setPrevBoxArray([...boxArray]);
                 const t0 = performance.now();
-                runButton.sortingAlgo(boxArray, setBoxArray);
+                if (runButton.sortingAlgo)
+                  runButton.sortingAlgo(boxArray, setBoxArray);
                 setIsSorted(true);
                 const t1 = performance.now();
                 updateExecutionTime(t1, t0, index);

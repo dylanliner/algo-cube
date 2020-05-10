@@ -11,8 +11,11 @@ export const LinearSearch = (
     if (box.number === x) {
       box.found = true;
       foundOne = true;
-      setBoxArray(boxArray);
     }
   });
-  if (!foundOne) setOpenDialog(true);
+  if (foundOne) {
+    setBoxArray(boxArray);
+  } else {
+    setOpenDialog(true);
+  }
 };

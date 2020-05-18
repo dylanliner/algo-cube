@@ -5,5 +5,5 @@ export const ExponentialSearch = (
   setBoxArray: (boxArray: BoxObject[]) => void,
   setOpenDialog: (bool: boolean) => void
 ): void => {
-  console.log("ExponentialSearch");
+  console.log("ExponentialSearch  test test");
 };

@@ -30,7 +30,7 @@ const App: React.FC = () => {
             <Button color="inherit" component={RouterLink} to="/searching">
               Searching
             </Button>
-            <Button color="inherit" component={RouterLink} to="/tsp">
+            <Button color="inherit" component={RouterLink} to="/tsp" disabled>
               Travelling Salesman Problem
             </Button>
           </Toolbar>

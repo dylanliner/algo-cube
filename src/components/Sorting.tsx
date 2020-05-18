@@ -89,6 +89,7 @@ const Sorting: React.FC = () => {
       shuffle(initBoxArray);
       setBoxArray(initBoxArray);
       setPrevBoxArray([]);
+      setIsSorted(false);
     }
     createBoxArray();
   }, [gridSize]);
@@ -114,7 +115,7 @@ const Sorting: React.FC = () => {
           </Canvas>
         </Grid>
       </Grid>
-      <Grid container justify="center" alignItems="center" spacing={3}>
+      <Grid container justify="center" alignItems="center" spacing={2}>
         <Grid item>
           <TextField
             label="Array Length"

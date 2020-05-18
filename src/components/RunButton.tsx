@@ -20,4 +20,5 @@ export interface RunButton {
     setBoxArray: (boxes: BoxObject[]) => void
   ) => void;
   executionTime?: string;
+  disabled?: boolean;
 }

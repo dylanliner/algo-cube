@@ -31,18 +31,22 @@ const Searching: React.FC = () => {
     {
       label: "Binary Search",
       searchingAlgo: BinarySearch,
+      disabled: true,
     },
     {
       label: "Jump Search",
       searchingAlgo: JumpSearch,
+      disabled: true,
     },
     {
       label: "Interpolation Search",
       searchingAlgo: InterpolationSearch,
+      disabled: true,
     },
     {
       label: "Exponential Search",
       searchingAlgo: ExponentialSearch,
+      disabled: true,
     },
   ]);
 

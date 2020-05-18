@@ -170,6 +170,7 @@ const Searching: React.FC = () => {
                 updateExecutionTime(t1, t0, index);
               }}
               variant="contained"
+              disabled={runButton.disabled}
             >
               {runButton.label}
             </Button>

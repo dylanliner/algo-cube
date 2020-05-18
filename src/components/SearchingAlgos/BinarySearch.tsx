@@ -5,5 +5,5 @@ export const BinarySearch = (
   setBoxArray: (boxArray: BoxObject[]) => void,
   setOpenDialog: (bool: boolean) => void
 ): void => {
-  console.log("BinarySearch");
+  console.log("BinarySearch testing testing");
 };

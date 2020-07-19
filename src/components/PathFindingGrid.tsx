@@ -209,7 +209,7 @@ const PathFindingGrid: React.FC = () => {
               <Button onClick={handleChange} variant="contained">
                 {grid.selectionMode === SelectionMode.BlockedNodes
                   ? "Click here when you are done"
-                  : "Click here to select block nodes"}
+                  : "Click here if you want to create obstacles"}
               </Button>
             </Grid>
             {buttons.map((runButton: RunButton, index: number) => (
@@ -241,16 +241,36 @@ const PathFindingGrid: React.FC = () => {
           </Grid>
         </Grid>
         <Grid item xs={8}>
-          <Canvas style={style}>
-            <ambientLight />
-            <pointLight position={[10, 10, 10]} />
-            {grid.boxes.map((rows: BoxObject[], index: number) =>
-              rows.map((boxProps: BoxObject, index: number) => (
-                <Box key={index.toString()} {...boxProps} />
-              ))
-            )}
-            <CustomCamera />
-          </Canvas>
+          <Grid container direction="column" spacing={1}>
+            <Grid
+              item
+              style={{
+                marginTop: "10px",
+                textAlign: "center",
+                fontSize: "large",
+              }}
+            >
+              {grid.selectionMode === SelectionMode.BlockedNodes
+                ? "Select nodes to create obstacles"
+                : grid.selectionMode === SelectionMode.StartNode
+                ? "Select a start node"
+                : grid.selectionMode === SelectionMode.EndNode
+                ? "Select a destination node"
+                : "Choose an algorithm to find the shortest path (on the left)!"}
+            </Grid>
+            <Grid item>
+              <Canvas style={style}>
+                <ambientLight />
+                <pointLight position={[10, 10, 10]} />
+                {grid.boxes.map((rows: BoxObject[], index: number) =>
+                  rows.map((boxProps: BoxObject, index: number) => (
+                    <Box key={index.toString()} {...boxProps} />
+                  ))
+                )}
+                <CustomCamera />
+              </Canvas>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       <Dialog
